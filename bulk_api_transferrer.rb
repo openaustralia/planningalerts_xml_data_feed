@@ -16,6 +16,7 @@ class BulkApiTransferrer
   end
 
   def applications_on_date(date)
+    # TODO: Handle multiple pages in response (i.e. > 1K results)
     JSON.parse(open(api_url(date)).read)
   end
 
@@ -23,4 +24,6 @@ class BulkApiTransferrer
     # TODO: Format XML correctly
     applications_on_date(date).to_xml
   end
+
+  # TODO: Get all applications for a week
 end
