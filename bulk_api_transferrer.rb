@@ -21,7 +21,7 @@ class BulkApiTransferrer
   end
 
   def applications_on_date_as_xml(date)
-    applications_on_date(date).to_xml(root: "applications", skip_types: true, dasherize: false)
+    as_xml applications_on_date(date)
   end
 
   # Returns all applications from the calendar week of the date specified as XML
@@ -31,6 +31,10 @@ class BulkApiTransferrer
     (start_of_week(date)...end_of_week(date)).each do |d|
       applications += applications_on_date(d)
     end
+    as_xml applications
+  end
+
+  def as_xml(applications)
     applications.to_xml(root: "applications", skip_types: true, dasherize: false)
   end
 
