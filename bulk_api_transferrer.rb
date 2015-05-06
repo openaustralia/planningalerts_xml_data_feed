@@ -16,6 +16,11 @@ class BulkApiTransferrer
   end
 
   def applications_on_date(date)
-    JSON.parse(open(api_url(date)).read).to_xml
+    JSON.parse(open(api_url(date)).read)
+  end
+
+  def applications_on_date_as_xml(date)
+    # TODO: Format XML correctly
+    applications_on_date(date).to_xml
   end
 end
