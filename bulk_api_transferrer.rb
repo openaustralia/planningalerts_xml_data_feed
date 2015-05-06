@@ -21,8 +21,7 @@ class BulkApiTransferrer
   end
 
   def applications_on_date_as_xml(date)
-    # TODO: Format XML correctly
-    applications_on_date(date).to_xml
+    applications_on_date(date).to_xml(root: "applications", skip_types: true, dasherize: false)
   end
 
   # TODO: Get all applications for a week
