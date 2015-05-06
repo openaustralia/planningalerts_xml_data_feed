@@ -24,6 +24,23 @@ class BulkApiTransferrer
     applications_on_date(date).to_xml(root: "applications", skip_types: true, dasherize: false)
   end
 
-  # TODO: Get all applications for a week
+  # Returns all applications from the calendar week of the date specified as XML
+  def calendar_week_applications(date_string)
+    date = Date.parse(date_string)
+    applications = []
+    (start_of_week(date)...end_of_week(date)).each do |d|
+      applications += applications_on_date(d)
+    end
+    applications.to_xml(root: "applications", skip_types: true, dasherize: false)
+  end
+
+  def start_of_week(date)
+    date - (date.cwday - 1)
+  end
+
+  def end_of_week(date)
+    date - (date.cwday - 7)
+  end
+
   # TODO: Transfer (FTP?) results somewhere
 end
