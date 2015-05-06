@@ -25,4 +25,5 @@ class BulkApiTransferrer
   end
 
   # TODO: Get all applications for a week
+  # TODO: Transfer (FTP?) results somewhere
 end
