@@ -3,6 +3,7 @@ require "open-uri"
 require "active_support"
 require "active_support/core_ext/array"
 require "active_support/core_ext/hash"
+require "active_support/core_ext/date"
 
 class BulkApiTransferrer
   def initialize
@@ -28,7 +29,7 @@ class BulkApiTransferrer
   def calendar_week_applications(date_string)
     date = Date.parse(date_string)
     applications = []
-    (start_of_week(date)...end_of_week(date)).each do |d|
+    (date.beginning_of_week...date.end_of_week).each do |d|
       applications += applications_on_date(d)
     end
     as_xml applications
@@ -36,14 +37,6 @@ class BulkApiTransferrer
 
   def as_xml(applications)
     applications.to_xml(root: "applications", skip_types: true, dasherize: false)
-  end
-
-  def start_of_week(date)
-    date - (date.cwday - 1)
-  end
-
-  def end_of_week(date)
-    date - (date.cwday - 7)
   end
 
   # TODO: Transfer (FTP?) results somewhere
