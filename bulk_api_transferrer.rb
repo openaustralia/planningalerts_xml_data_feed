@@ -12,12 +12,12 @@ class BulkApiTransferrer
   end
 
   def api_url(date_scraped)
-    "#{ENV["API_ENDPOINT"]}?key=#{ENV["API_KEY"]}&date_scraped=#{date_scraped}"
+    "#{ENV["API_ENDPOINT"]}?v=2&key=#{ENV["API_KEY"]}&date_scraped=#{date_scraped}"
   end
 
   def applications_on_date(date)
     # TODO: Handle multiple pages in response (i.e. > 1K results)
-    JSON.parse(open(api_url(date)).read)
+    JSON.parse(open(api_url(date)).read)["applications"]
   end
 
   def applications_on_date_as_xml(date)
