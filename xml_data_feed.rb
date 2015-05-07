@@ -5,7 +5,7 @@ require "active_support/core_ext/array"
 require "active_support/core_ext/hash"
 require "active_support/core_ext/date"
 
-class BulkApiTransferrer
+class XmlDataFeed
   def initialize
     %w{API_ENDPOINT API_KEY}.each do |c|
       raise "Missing configuration: #{c}" if ENV[c].nil?
