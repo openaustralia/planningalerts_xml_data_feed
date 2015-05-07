@@ -36,6 +36,7 @@ class XmlDataFeed
   end
 
   def as_xml(applications)
+    # FIXME: This is incorrectly nesting an application below an extra application tag
     applications.to_xml(root: "applications", skip_types: true, dasherize: false)
   end
 
