@@ -18,7 +18,7 @@ class XmlDataFeed
 
   def applications_on_date(date)
     # TODO: Handle multiple pages in response (i.e. > 1K results)
-    JSON.parse(open(api_url(date)).read)["applications"]
+    JSON.parse(open(api_url(date)).read)["applications"].map { |a| a["application"] }
   end
 
   def applications_on_date_as_xml(date)
@@ -36,7 +36,6 @@ class XmlDataFeed
   end
 
   def as_xml(applications)
-    # FIXME: This is incorrectly nesting an application below an extra application tag
     applications.to_xml(root: "applications", skip_types: true, dasherize: false)
   end
 
