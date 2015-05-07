@@ -8,11 +8,18 @@ GEM
       thread_safe (~> 0.3, >= 0.3.4)
       tzinfo (~> 1.1)
     builder (3.2.2)
+    coderay (1.1.0)
     dotenv (2.0.1)
     i18n (0.7.0)
     json (1.8.1)
+    method_source (0.8.2)
     minitest (5.5.0)
+    pry (0.10.1)
+      coderay (~> 1.1.0)
+      method_source (~> 0.8.1)
+      slop (~> 3.4)
     rake (10.4.2)
+    slop (3.6.0)
     thread_safe (0.3.4)
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
@@ -24,4 +31,5 @@ DEPENDENCIES
   activesupport
   builder
   dotenv
+  pry
   rake
