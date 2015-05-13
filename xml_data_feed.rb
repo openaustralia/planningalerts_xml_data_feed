@@ -7,7 +7,8 @@ require "active_support/core_ext/date"
 require "net/sftp"
 
 class XmlDataFeed
-  def initialize
+  def initialize(opts = {date: Date.today})
+    @date = Date.parse opts[:date]
     # TODO: Read these out of the .env-example
     %w{API_ENDPOINT API_KEY SFTP_HOST SFTP_USERNAME SFTP_PASSWORD}.each do |c|
       raise "Missing configuration: #{c}" if ENV[c].nil?
@@ -28,10 +29,9 @@ class XmlDataFeed
   end
 
   # Returns all applications from the calendar week of the date specified as XML
-  def calendar_week_applications(date_string)
-    date = Date.parse(date_string)
+  def calendar_week_applications
     applications = []
-    (date.beginning_of_week...date.end_of_week).each do |d|
+    (@date.beginning_of_week...@date.end_of_week).each do |d|
       applications += applications_on_date(d)
     end
     as_xml applications
@@ -42,15 +42,12 @@ class XmlDataFeed
   end
 
   def transfer_applications(date_string)
-    date = Date.parse(date_string)
-    applications = calendar_week_applications(date_string)
-
     Net::SFTP.start(ENV["SFTP_HOST"], ENV["SFTP_USERNAME"], password: ENV["SFTP_PASSWORD"], port: (ENV["SFTP_PORT"] || 22)) do |sftp|
       # Ignore StatusException since it's also used when there's already a directory
-      sftp.mkdir! "#{date.year}" rescue Net::SFTP::StatusException
+      sftp.mkdir! "#{@date.year}" rescue Net::SFTP::StatusException
 
-      sftp.file.open("#{date.year}/planningalerts_#{date.year}-week#{date.cweek}.xml", "w") do |f|
-        f.puts applications
+      sftp.file.open("#{@date.year}/planningalerts_#{@date.year}-week#{@date.cweek}.xml", "w") do |f|
+        f.puts calendar_week_applications
       end
     end
   end
