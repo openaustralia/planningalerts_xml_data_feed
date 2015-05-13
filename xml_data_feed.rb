@@ -53,7 +53,7 @@ class XmlDataFeed
     applications = calendar_week_applications
 
     puts "Connecting to #{ENV["SFTP_HOST"]}..."
-    Net::SFTP.start(ENV["SFTP_HOST"], ENV["SFTP_USERNAME"], password: ENV["SFTP_PASSWORD"], port: (ENV["SFTP_PORT"] || 22)) do |sftp|
+    Net::SFTP.start(ENV["SFTP_HOST"], ENV["SFTP_USERNAME"], password: ENV["SFTP_PASSWORD"], port: (ENV["SFTP_PORT"] || 22), compression: true) do |sftp|
       # Ignore StatusException since it's also used when there's already a directory
       sftp.mkdir! "#{@date.year}" rescue Net::SFTP::StatusException
 
