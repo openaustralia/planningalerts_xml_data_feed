@@ -5,6 +5,7 @@ require "active_support/core_ext/array"
 require "active_support/core_ext/hash"
 require "active_support/core_ext/date"
 require "net/sftp"
+require "stringio"
 
 class XmlDataFeed
   def initialize(opts = {date: Date.today})
@@ -57,9 +58,9 @@ class XmlDataFeed
       sftp.mkdir! "#{@date.year}" rescue Net::SFTP::StatusException
 
       puts "Uploading applications..."
-      sftp.file.open("#{@date.year}/planningalerts_#{@date.year}-week#{@date.cweek}.xml", "w") do |f|
-        f.puts applications
-      end
+      # Workaround NET::SFTP file.open not supporting upload of UTF-8
+      io = StringIO.new(applications)
+      sftp.upload!(io, "#{@date.year}/planningalerts_#{@date.year}-week#{@date.cweek}.xml")
       puts "Transfer complete."
     end
   end
