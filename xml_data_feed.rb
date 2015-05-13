@@ -41,7 +41,7 @@ class XmlDataFeed
     applications.to_xml(root: "applications", skip_types: true, dasherize: false)
   end
 
-  def transfer_applications(date_string)
+  def transfer_applications
     Net::SFTP.start(ENV["SFTP_HOST"], ENV["SFTP_USERNAME"], password: ENV["SFTP_PASSWORD"], port: (ENV["SFTP_PORT"] || 22)) do |sftp|
       # Ignore StatusException since it's also used when there's already a directory
       sftp.mkdir! "#{@date.year}" rescue Net::SFTP::StatusException
