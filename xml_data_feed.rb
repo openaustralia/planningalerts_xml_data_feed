@@ -7,7 +7,8 @@ require "active_support/core_ext/date"
 
 class XmlDataFeed
   def initialize
-    %w{API_ENDPOINT API_KEY}.each do |c|
+    # TODO: Read these out of the .env-example
+    %w{API_ENDPOINT API_KEY SFTP_HOST SFTP_USERNAME SFTP_PASSWORD}.each do |c|
       raise "Missing configuration: #{c}" if ENV[c].nil?
     end
   end
