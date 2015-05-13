@@ -4,6 +4,7 @@ require "active_support"
 require "active_support/core_ext/array"
 require "active_support/core_ext/hash"
 require "active_support/core_ext/date"
+require "net/sftp"
 
 class XmlDataFeed
   def initialize
@@ -40,5 +41,17 @@ class XmlDataFeed
     applications.to_xml(root: "applications", skip_types: true, dasherize: false)
   end
 
-  # TODO: Transfer (FTP?) results somewhere
+  def transfer_applications(date_string)
+    date = Date.parse(date_string)
+    applications = calendar_week_applications(date_string)
+
+    Net::SFTP.start(ENV["SFTP_HOST"], ENV["SFTP_USERNAME"], password: ENV["SFTP_PASSWORD"], port: (ENV["SFTP_PORT"] || 22)) do |sftp|
+      # Ignore StatusException since it's also used when there's already a directory
+      sftp.mkdir! "#{date.year}" rescue Net::SFTP::StatusException
+
+      sftp.file.open("#{date.year}/planningalerts_#{date.year}-week#{date.cweek}.xml", "w") do |f|
+        f.puts applications
+      end
+    end
+  end
 end
