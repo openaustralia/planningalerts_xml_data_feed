@@ -20,12 +20,14 @@ class XmlDataFeed
   end
 
   def applications_on_date(date)
+    puts "Collecting applications for #{date}..."
     # TODO: Handle multiple pages in response (i.e. > 1K results)
     JSON.parse(open(api_url(date)).read)["applications"].map { |a| a["application"] }
   end
 
   # Returns all applications from the calendar week of the date specified as XML
   def calendar_week_applications
+    puts "Collecting applications for #{@date.year}, week #{@date.cweek}..."
     applications = []
     (@date.beginning_of_week...@date.end_of_week).each do |d|
       applications += applications_on_date(d)
@@ -38,13 +40,18 @@ class XmlDataFeed
   end
 
   def transfer_applications
+    applications = calendar_week_applications
+
+    puts "Connecting to #{ENV["SFTP_HOST"]}..."
     Net::SFTP.start(ENV["SFTP_HOST"], ENV["SFTP_USERNAME"], password: ENV["SFTP_PASSWORD"], port: (ENV["SFTP_PORT"] || 22)) do |sftp|
       # Ignore StatusException since it's also used when there's already a directory
       sftp.mkdir! "#{@date.year}" rescue Net::SFTP::StatusException
 
+      puts "Uploading applications..."
       sftp.file.open("#{@date.year}/planningalerts_#{@date.year}-week#{@date.cweek}.xml", "w") do |f|
-        f.puts calendar_week_applications
+        f.puts applications
       end
+      puts "Transfer complete."
     end
   end
 end
