@@ -36,7 +36,7 @@ class XmlDataFeed
 
   # Returns all applications from the calendar week of the date specified as XML
   def calendar_week_applications
-    puts "Collecting applications for #{@date.year}, week #{@date.cweek}..."
+    puts "Collecting applications for #{year}, week #{@date.cweek}..."
     applications = []
     (@date.beginning_of_week...@date.end_of_week).each do |d|
       applications += applications_on_date(d)
@@ -55,13 +55,18 @@ class XmlDataFeed
     puts "Connecting to #{ENV["SFTP_HOST"]}..."
     Net::SFTP.start(ENV["SFTP_HOST"], ENV["SFTP_USERNAME"], password: ENV["SFTP_PASSWORD"], port: (ENV["SFTP_PORT"] || 22), compression: true) do |sftp|
       # Ignore StatusException since it's also used when there's already a directory
-      sftp.mkdir! "#{@date.year}" rescue Net::SFTP::StatusException
+      sftp.mkdir! "#{year}" rescue Net::SFTP::StatusException
 
       puts "Uploading applications..."
       # Workaround NET::SFTP file.open not supporting upload of UTF-8
       io = StringIO.new(applications)
-      sftp.upload!(io, "#{@date.year}/planningalerts_#{@date.year}-week#{@date.cweek}.xml")
+      sftp.upload!(io, "#{year}/planningalerts_#{year}-week#{@date.cweek}.xml")
       puts "Transfer complete."
     end
+  end
+
+  # If this day is right at the end of the year then it might be part of next year
+  def year
+    @date.cweek == 1 && @date.month == 12 ? @date.year + 1 : @date.year
   end
 end
