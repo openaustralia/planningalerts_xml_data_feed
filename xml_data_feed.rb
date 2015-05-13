@@ -15,14 +15,22 @@ class XmlDataFeed
     end
   end
 
-  def api_url(date_scraped)
-    "#{ENV["API_ENDPOINT"]}?v=2&key=#{ENV["API_KEY"]}&date_scraped=#{date_scraped}"
+  def api_url(date_scraped, page = 1)
+    "#{ENV["API_ENDPOINT"]}?v=2&key=#{ENV["API_KEY"]}&date_scraped=#{date_scraped}&page=#{page}"
   end
 
   def applications_on_date(date)
     puts "Collecting applications for #{date}..."
-    # TODO: Handle multiple pages in response (i.e. > 1K results)
-    JSON.parse(open(api_url(date)).read)["applications"].map { |a| a["application"] }
+    first_page = JSON.parse(open(api_url(date)).read)
+    applications = first_page["applications"].map { |a| a["application"] }
+
+    (first_page["page_count"] - 1).times do |t|
+      page = t + 2
+      puts "Page #{page}..."
+      applications += JSON.parse(open(api_url(date, page)).read)["applications"].map { |a| a["application"] }
+    end
+
+    applications
   end
 
   # Returns all applications from the calendar week of the date specified as XML
