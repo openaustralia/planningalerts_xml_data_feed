@@ -24,10 +24,6 @@ class XmlDataFeed
     JSON.parse(open(api_url(date)).read)["applications"].map { |a| a["application"] }
   end
 
-  def applications_on_date_as_xml(date)
-    as_xml applications_on_date(date)
-  end
-
   # Returns all applications from the calendar week of the date specified as XML
   def calendar_week_applications
     applications = []
