@@ -66,8 +66,14 @@ class XmlDataFeed
     end
   end
 
-  # If this day is right at the end of the year then it might be part of next year
+  # If this day is right at the start or end of a year then it might be part of next year
   def year
-    @date.cweek == 1 && @date.month == 12 ? @date.year + 1 : @date.year
+    if @date.cweek == 1 && @date.month == 12
+      @date.year + 1
+    elsif @date.cweek == 52 && @date.month == 1
+      @date.year - 1
+    else
+      @date.year
+    end
   end
 end
