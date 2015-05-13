@@ -40,6 +40,7 @@ class XmlDataFeed
     (@date.beginning_of_week...@date.end_of_week).each do |d|
       applications += applications_on_date(d)
     end
+    puts "Collected #{applications.count} applications."
     as_xml applications
   end
 
