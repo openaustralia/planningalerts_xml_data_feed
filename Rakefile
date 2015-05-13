@@ -17,6 +17,8 @@ task :transfer_applications, [:from_date, :to_date] do |t, args|
       XmlDataFeed.new(date: date.to_s).transfer_applications
       date = date + 1.week
     end
+  elsif args.from_date == "yesterday"
+    XmlDataFeed.new(date: (Date.today - 1).to_s).transfer_applications
   else
     XmlDataFeed.new(date: args.from_date).transfer_applications
   end
