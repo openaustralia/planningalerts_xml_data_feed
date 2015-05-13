@@ -37,6 +37,7 @@ class XmlDataFeed
   # Returns all applications from the calendar week of the date specified as XML
   def calendar_week_applications
     puts "Collecting applications for #{year}, week #{@date.cweek}..."
+    raise "This week ain't over! It would result in a partial file, so stopping" if @date.end_of_week >= Date.today
     applications = []
     (@date.beginning_of_week...@date.end_of_week).each do |d|
       applications += applications_on_date(d)
