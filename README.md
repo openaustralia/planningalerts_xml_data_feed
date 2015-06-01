@@ -12,4 +12,5 @@ Fetches bulk data from the [PlanningAlerts API](https://www.planningalerts.org.a
 
 This repo is just cloned under `kedumba`'s `deploy` user. There's a cronjob set up to run it each Monday morning at 7AM:
 
-    0 7 * * MON /home/deploy/.rvm/wrappers/ruby-2.0.0-p353/bundle exec dotenv rake transfer_applications[yesterday]
+    0 7 * * MON cd /home/deploy/planningalerts_xml_data_feed/ && /home/deploy/.rvm/wrappers/ruby-2.0.0-p353/bundle exec dotenv rake transfer_applications[yesterday]
+
