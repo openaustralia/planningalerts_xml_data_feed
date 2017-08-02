@@ -66,6 +66,12 @@ class XmlDataFeed
     end
   end
 
+  def save_json_file
+    File.open("#{@date}.json", "w") do |f|
+      f << applications_on_date(@date).to_json
+    end
+  end
+
   # If this day is right at the start or end of a year then it might be part of next year
   def year
     if @date.cweek == 1 && @date.month == 12
